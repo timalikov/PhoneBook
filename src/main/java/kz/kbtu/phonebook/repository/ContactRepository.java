@@ -15,4 +15,5 @@ public interface ContactRepository extends CrudRepository<Contact, Integer> {
 //    Contact getContactByUsername(String username);
     Page<Contact> findContactByPhoneNumber(String phoneNumber, Pageable pageable);
     Page<Contact> findContactByUserUsername(String username, Pageable pageable);
+
 }
