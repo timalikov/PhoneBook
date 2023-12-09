@@ -2,6 +2,7 @@ package kz.kbtu.phonebook.service;
 import kz.kbtu.phonebook.model.User;
 import kz.kbtu.phonebook.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    @Autowired
+    private EventPublisher eventPublisher;
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -25,6 +28,7 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        eventPublisher.publishEvent(user.toString());
         return userRepository.save(user);
     }
 
