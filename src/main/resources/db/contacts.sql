@@ -8,3 +8,4 @@ CREATE TABLE contacts (
                           phone_number VARCHAR(255),
                           user_id  int NOT NULL REFERENCES users(id)
 );
+
