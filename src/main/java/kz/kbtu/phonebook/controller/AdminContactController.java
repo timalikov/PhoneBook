@@ -19,8 +19,8 @@ public class AdminContactController {
     private final ContactRepository contactRepository;
 
     @GetMapping("/contacts")
-    public Iterable<Contact> findAllContacts() {
-        return this.contactRepository.findAll();
+    public Page<Contact> findAllContacts(Pageable pageable) {
+        return this.contactRepository.findAll(pageable);
     }
 
     @PostMapping("/contacts")
@@ -67,6 +67,4 @@ public class AdminContactController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
 }
