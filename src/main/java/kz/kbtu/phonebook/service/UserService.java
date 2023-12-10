@@ -2,7 +2,6 @@ package kz.kbtu.phonebook.service;
 import kz.kbtu.phonebook.model.User;
 import kz.kbtu.phonebook.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,13 +27,14 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        eventPublisher.publishEvent(user.toString());
+        eventPublisher.publishEvent("Created user: " + user.toString());
         return userRepository.save(user);
     }
 
     public User updateUser(Long id, User updatedUser) {
         if (userRepository.existsById(id)) {
             updatedUser.setId(id);
+            eventPublisher.publishEvent(("Updated user: " + updatedUser.toString()));
             return userRepository.save(updatedUser);
         }
         return null; // Or throw an exception indicating user not found
@@ -42,6 +42,7 @@ public class UserService {
 
 
     public void deleteUser(Long id) {
+        eventPublisher.publishEvent("User deleted: " + userRepository.findById(id).toString());
         userRepository.deleteById(id);
     }
 }

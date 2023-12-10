@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContactService {
     public final ContactRepository contactRepository;
+
     public Page<Contact> findAll(Pageable pageable) {
         return contactRepository.findAll(pageable);
     }
