@@ -1,6 +1,7 @@
 CREATE TABLE users (
                        id SERIAL PRIMARY KEY,
                        username varchar
+                       password varchar
 );
 CREATE TABLE contacts (
                           contact_id SERIAL PRIMARY KEY,

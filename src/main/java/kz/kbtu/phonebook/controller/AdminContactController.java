@@ -3,29 +3,56 @@ package kz.kbtu.phonebook.controller;
 import kz.kbtu.phonebook.model.Contact;
 import kz.kbtu.phonebook.repository.ContactRepository;
 import lombok.AllArgsConstructor;
+import org.casbin.jcasbin.main.Enforcer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
-
 @RequestMapping("/admin")
 public class AdminContactController {
     private final ContactRepository contactRepository;
+    private final Enforcer enforcer;
 
     @GetMapping("/contacts")
     public Page<Contact> findAllContacts(Pageable pageable) {
-        return this.contactRepository.findAll(pageable);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Extract roles (authorities) from the authentication object
+        Set<String> roles = authentication.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .collect(Collectors.toSet());
+
+        // Assuming a user has one role for simplicity
+        String userRole = roles.iterator().next();
+
+        String sub = userRole; // Use the user's role as the subject
+        String obj = "/contacts";
+        String act = "GET";
+
+        boolean result = enforcer.enforce(sub, obj, act);
+        if (result) {
+            return this.contactRepository.findAll(pageable);
+        } else {
+            return null;
+        }
     }
 
     @PostMapping("/contacts")
     public Contact addContact(@RequestBody Contact contact) {
+
         return this.contactRepository.save(contact);
+
     }
 
 

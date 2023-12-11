@@ -1,0 +1,6 @@
+p, admin, /contacts, POST
+p, admin, /contacts, GET
+p, reader, /contacts, GET
+
+g, alice, admin
+g, bob, reader
